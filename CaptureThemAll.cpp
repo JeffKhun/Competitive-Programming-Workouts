@@ -1,32 +1,33 @@
-﻿#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <iostream>
 #include <cmath>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+#include <string>
 using namespace std;
 
 int f[8][8][8][8];
 struct CaptureThemAll {
-   int fastKnight(string knight, string rook, string queen) {
-      int kr=knight[1]-'1', kc=knight[0]-'a';
-      int rr=rook[1]-'1', rc=rook[0]-'a';
-      int qr=queen[1]-'1', qc=queen[0]-'a';
-      for (int i=0; i<8; ++i)
-         for (int j=0; j<8; ++j)
-            for (int r=0; r<8; ++r)
-               for (int c=0; c<8; ++c) {
-                  f[i][j][r][c]=10000;
-                  if (i==r && j==c) f[i][j][r][c]=0;
-                  if (abs(i-r)==2 && abs(j-c)==1) f[i][j][r][c]=1;
-                  if (abs(i-r)==1 && abs(j-c)==2) f[i][j][r][c]=1;
-               }
-      for (int a=0; a<8; ++a)
-         for (int b=0; b<8; ++b)
-            for (int k=0; k<8; ++k)
-               for (int i=0; i<8; ++i)
-                  for (int j=0; j<8; ++j)
-                     for (int r=0; r<8; ++r)
+    int fastKnight(string knight, string rook, string queen) {
+        for (int a=0; a<8; ++a)
+            for (int b=0; b<8; ++b)
+                for (int c=0; c<8; ++c)
+                    for (int d=0; d<8; ++d) {
+                        if (a==c && b==d) f[a][b][c][d]=0;
+                        else f[a][b][c][d]=1000;
+                        if (abs(a-c)==1 && abs(b-d)==2) f[a][b][c][d]=1;
+                        if (abs(a-c)==2 && abs(b-d)==1) f[a][b][c][d]=1;
+                    }
+        for (int i=0; i<8; ++i)
+            for (int j=0; j<8; ++j)
+                for (int a=0; a<8; ++a)
+                    for (int b=0; b<8; ++b)
                         for (int c=0; c<8; ++c)
-                           f[i][j][r][c]=min(f[i][j][r][c],f[i][j][a][b]+f[a][b][r][c]);
-      return min(f[kr][kc][rr][rc]+f[rr][rc][qr][qc], f[kr][kc][qr][qc]+f[qr][qc][rr][rc]);
-   }
+                            for (int d=0; d<8; ++d)
+                                f[a][b][c][d]=min(f[a][b][c][d], f[a][b][i][j]+f[i][j][c][d]);
+        int kr=knight[0]-'a', kc=knight[1]-'1';
+        int rr=rook[0]-'a', rc=rook[1]-'1';
+        int qr=queen[0]-'a', qc=queen[1]-'1';
+        return min(f[kr][kc][rr][rc]+f[rr][rc][qr][qc], f[kr][kc][qr][qc]+f[qr][qc][rr][rc]);
+    }
 };
